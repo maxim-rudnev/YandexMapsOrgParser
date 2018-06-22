@@ -1,0 +1,67 @@
+﻿@{
+    ViewBag.Title = "Парсер организаций Яндекс Карты";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@section Scripts {
+    <script src="~/Scripts/Index/Index.js"></script>
+}
+
+
+
+<div class="section section-contact-us text-center">
+    <div class="container">
+        <h2 class="title">@ViewBag.Title</h2>
+        <p class="description">Укажите условия сбора данных</p>
+        <div class="row">
+            <div class="col-lg-6 text-center col-md-8 ml-auto mr-auto">
+                <div class="input-group input-lg">
+                    <span class="input-group-addon">
+                        @*<i class="now-ui-icons users_circle-08"></i>*@
+                    </span>
+                    <input id="city" name="city" type="text" class="form-control" placeholder="Город">
+                </div>
+
+
+
+
+
+                <div class="input-group input-lg">
+                    <span class="input-group-addon">
+                        @*<i class="now-ui-icons"></i>*@
+                    </span>
+                    <input id="category" type="text" class="form-control" placeholder="Категория">
+                </div>
+               
+                <div class="send-button">
+                    <button id="GetOrganizations"  class="btn btn-primary btn-round btn-block btn-lg">Получить данные по организациям</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+
+            <div class="card">
+
+                <div class="card-body">
+                    <table id="organizations" class="display" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th>Наименование</th>
+                                <th>Категории</th>
+                                <th>Страница компании</th>
+                                <th>Адрес</th>
+                                <th>Телефон</th>
+                                <th>Город</th>
+                            </tr>
+                        </thead>
+
+                    </table>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+</div>
