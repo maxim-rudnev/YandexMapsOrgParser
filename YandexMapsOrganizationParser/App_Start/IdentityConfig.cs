@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
+using System.Net;
+using System.Net.Mail;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
@@ -16,10 +18,51 @@ namespace YandexMapsOrganizationParser
 {
     public class EmailService : IIdentityMessageService
     {
+        string _smtpAddress = "wpl23.hosting.reg.ru";
+        int _portNumber = 587;
+        bool _enableSSL = true;
+        string _emailFrom = "noreply@adaptive-crm.ru";
+        string _password = "qwas1234";
+
         public Task SendAsync(IdentityMessage message)
         {
+            _mailSend(message);
+
             // Plug in your email service here to send an email.
             return Task.FromResult(0);
+        }
+
+        private void _mailSend(IdentityMessage message)
+        {
+            using (MailMessage mail = new MailMessage())
+            {
+                MailAddress addrFrom = new MailAddress(_emailFrom, "Yandex Org. Parser");
+
+
+                mail.From = addrFrom;
+                mail.To.Add(message.Destination);
+                mail.Subject = message.Subject;
+                mail.Body = message.Body;
+                mail.IsBodyHtml = true;
+                mail.Priority = MailPriority.High;
+
+                using (SmtpClient smtp = new SmtpClient(_smtpAddress, _portNumber))
+                {
+                    smtp.Host = _smtpAddress;
+                    smtp.Port = _portNumber;
+                    smtp.EnableSsl = _enableSSL;
+                    smtp.Credentials = new NetworkCredential(_emailFrom, _password);
+
+
+                    try
+                    {
+                        smtp.Send(mail);
+                    }
+                    catch (Exception ex)
+                    {
+                    }
+                }
+            }
         }
     }
 
@@ -54,10 +97,10 @@ namespace YandexMapsOrganizationParser
             manager.PasswordValidator = new PasswordValidator
             {
                 RequiredLength = 6,
-                RequireNonLetterOrDigit = true,
-                RequireDigit = true,
-                RequireLowercase = true,
-                RequireUppercase = true,
+                //RequireNonLetterOrDigit = true,
+                //RequireDigit = true,
+                //RequireLowercase = true,
+                //RequireUppercase = true,
             };
 
             // Configure user lockout defaults

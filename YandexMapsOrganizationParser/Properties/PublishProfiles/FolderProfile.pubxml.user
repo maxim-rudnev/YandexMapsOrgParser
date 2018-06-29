@@ -6,7 +6,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <TimeStampOfAssociatedLegacyPublishXmlFile />
-    <_PublishTargetUrl>c:\users\admin\source\repos\YandexMapsOrganizationParser\YandexMapsOrganizationParser\bin\Release\Publish</_PublishTargetUrl>
+    <_PublishTargetUrl>C:\Users\admin\source\repos\YandexMapsOrganizationParser\YandexMapsOrganizationParser\bin\Release\Publish</_PublishTargetUrl>
   </PropertyGroup>
   <ItemGroup>
     <File Include="ApplicationInsights.config">
@@ -441,6 +441,9 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <File Include="assets/js/plugins/nouislider.min.js">
       <publishTime>08/30/2017 18:50:34</publishTime>
     </File>
+    <File Include="assets/plugins/jquery.kladr/images/spinner.png">
+      <publishTime>06/17/2018 17:41:32</publishTime>
+    </File>
     <File Include="assets/plugins/jquery.kladr/jquery.kladr.min.css">
       <publishTime>01/22/2018 02:45:50</publishTime>
     </File>
@@ -847,10 +850,10 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>01/23/2014 14:57:34</publishTime>
     </File>
     <File Include="bin/YandexMapsOrganizationParser.dll">
-      <publishTime>06/17/2018 18:55:22</publishTime>
+      <publishTime>06/30/2018 00:33:06</publishTime>
     </File>
     <File Include="bin/YandexMapsOrganizationParser.pdb">
-      <publishTime>06/17/2018 18:55:22</publishTime>
+      <publishTime>06/30/2018 00:33:06</publishTime>
     </File>
     <File Include="Content/bootstrap-theme.css">
       <publishTime>06/17/2018 17:01:22</publishTime>
@@ -875,6 +878,9 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     </File>
     <File Include="Content/bootstrap.min.css.map">
       <publishTime>06/17/2018 17:01:22</publishTime>
+    </File>
+    <File Include="Content/custom.css">
+      <publishTime>06/26/2018 09:10:06</publishTime>
     </File>
     <File Include="Content/Site.css">
       <publishTime>06/17/2018 17:00:44</publishTime>
@@ -907,7 +913,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>06/17/2018 17:01:21</publishTime>
     </File>
     <File Include="Scripts/Index/Index.js">
-      <publishTime>06/17/2018 18:47:56</publishTime>
+      <publishTime>06/30/2018 00:12:12</publishTime>
     </File>
     <File Include="Scripts/jquery-3.3.1.js">
       <publishTime>06/17/2018 17:01:24</publishTime>
@@ -979,13 +985,13 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>06/17/2018 17:01:45</publishTime>
     </File>
     <File Include="Views/Home/About.cshtml">
-      <publishTime>06/17/2018 17:00:44</publishTime>
+      <publishTime>06/29/2018 12:22:07</publishTime>
     </File>
     <File Include="Views/Home/Contact.cshtml">
       <publishTime>06/17/2018 17:00:44</publishTime>
     </File>
     <File Include="Views/Home/Index.cshtml">
-      <publishTime>06/17/2018 18:04:12</publishTime>
+      <publishTime>06/30/2018 00:29:18</publishTime>
     </File>
     <File Include="Views/Manage/AddPhoneNumber.cshtml">
       <publishTime>06/17/2018 17:01:45</publishTime>
@@ -1005,6 +1011,9 @@ by editing this MSBuild file. In order to learn more about this please visit htt
     <File Include="Views/Manage/VerifyPhoneNumber.cshtml">
       <publishTime>06/17/2018 17:01:45</publishTime>
     </File>
+    <File Include="Views/Payment/Order.cshtml">
+      <publishTime>06/30/2018 00:27:36</publishTime>
+    </File>
     <File Include="Views/Shared/Error.cshtml">
       <publishTime>06/17/2018 17:01:44</publishTime>
     </File>
@@ -1012,7 +1021,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>06/17/2018 17:01:45</publishTime>
     </File>
     <File Include="Views/Shared/_Layout.cshtml">
-      <publishTime>06/17/2018 18:51:57</publishTime>
+      <publishTime>06/26/2018 09:23:27</publishTime>
     </File>
     <File Include="Views/Shared/_LoginPartial.cshtml">
       <publishTime>06/17/2018 17:01:45</publishTime>
@@ -1024,7 +1033,7 @@ by editing this MSBuild file. In order to learn more about this please visit htt
       <publishTime>06/17/2018 17:00:44</publishTime>
     </File>
     <File Include="Web.config">
-      <publishTime>06/17/2018 18:55:24</publishTime>
+      <publishTime>06/29/2018 11:44:35</publishTime>
     </File>
   </ItemGroup>
 </Project>

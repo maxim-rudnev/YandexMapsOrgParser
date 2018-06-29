@@ -5,12 +5,13 @@ using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
+using YandexMapsOrganizationParser.Domain;
 
 namespace YandexMapsOrganizationParser.Kernel
 {
     public class YandexMapsApiClient
     {
-
+        // Метод взаимодействует с api яндекс карт, возвращает список компаний
         public static async Task<List<Company>> GetOrganizations(string city, string category)
         {
             List<Company> res = new List<Company>();
@@ -37,7 +38,40 @@ namespace YandexMapsOrganizationParser.Kernel
 
                     c.Name = company["properties"]["CompanyMetaData"].name;
                     c.Address = company["properties"]["CompanyMetaData"].address;
+                    c.City = city;
 
+                    // парсинг категорий
+                    try
+                    {
+                        foreach (var ct in company["properties"]["CompanyMetaData"].Categories)
+                        {
+
+                            c.Category += (string)ct["name"] + " ";
+                        }
+                    }
+                    catch { }
+
+                    // парсинг времени
+                    try
+                    {
+                        
+                        c.Time = company["properties"]["CompanyMetaData"].Hours.text;
+                        
+                    }
+                    catch { }
+
+                    // парсинг ссылок
+                    try
+                    {
+                        foreach (var link in company["properties"]["CompanyMetaData"].Links)
+                        {
+
+                            c.Links += (string)link["href"] + " ";
+                        }
+                    }
+                    catch { }
+
+                    // парсинг телефонов
                     try
                     {
                         foreach (var phone in company["properties"]["CompanyMetaData"].Phones)

@@ -1,4 +1,6 @@
-﻿@{
+﻿@model YandexMapsOrganizationParser.Models.HomeViewModels.IndexVM
+
+@{
     ViewBag.Title = "Парсер организаций Яндекс Карты";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
@@ -8,57 +10,268 @@
     <script src="~/Scripts/Index/Index.js"></script>
 }
 
+<div class="text-right pt-3 container">
+    <div class="row">
+
+        <p class="mr-auto" id="query-count">Осталось запросов: <span id="ReqLeft">@Model.ReqLeft</span> </p>
+
+        <!-- if user -->
+
+        @if (User.Identity.IsAuthenticated)
+        {
+
+            <form action="/Account/LogOff" method="post" id="logoffForm">
+                @Html.AntiForgeryToken()
+            </form>
+
+            <div class="d-block text-success mr-3 pt-2">
+                <span>Пользователь: @User.Identity.Name</span>
+            </div>
+
+            <button class="ui primary mini button" id="user-info" onclick="$('#logoffForm').submit();">
+                <i class="fa fa-user"></i> Выйти
+            </button>
+        }
+        else
+        {
+
+
+            <button class="ui primary mini button" data-toggle="modal" data-target="#sign-modal">
+                <i class="fa fa-user"></i> Войти
+            </button>
+
+            <div class="modal fade" id="sign-modal" tabindex="-1" role="dialog" aria-labelledby="sign-modal-label" style="display: none;" aria-hidden="true">
+                <form class="modal-dialog" role="document" action="/Account/Login" method="post" id="authForm">
+
+                    @Html.AntiForgeryToken()
+
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="sign-modal-label">Вход</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+
+                            <div class="form-group text-left">
+                                <label for="recipient-name" class="col-form-label">Email</label>
+                                <input type="text" class="form-control" id="recipient-name" name="Email">
+                            </div>
+                            <div class="form-group text-left">
+                                <label for="recipient-name" class="col-form-label">Пароль</label>
+                                <input type="text" class="form-control" id="recipient-name" name="Password">
+                            </div>
+
+                            <div class="form-group text-left" id="authMessageBlock">
+
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Войти</button>
+
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+
+
+            <button class="ui primary mini button" id="user-info" data-toggle="modal" data-target="#reg-modal">
+                <i class="fa fa-user"></i> Зарегистрироваться
+            </button>
+
+            <div class="modal fade" id="reg-modal" tabindex="-1" role="dialog" aria-labelledby="reg-modal-label" style="display: none;" aria-hidden="true">
+                <form class="modal-dialog" role="document" action="/Account/Register" method="post" id="regForm">
+
+                    @Html.AntiForgeryToken()
+
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="sign-modal-label">Регистрация</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">×</span>
+                            </button>
+                        </div>
+                        <div class="modal-body">
+
+                            <div class="form-group text-left">
+                                <label for="recipient-name" class="col-form-label">Email</label>
+                                <input type="text" class="form-control" id="recipient-name" name="Email">
+                            </div>
+                            <div class="form-group text-left">
+                                <label for="recipient-name" class="col-form-label">Пароль</label>
+                                <input type="text" class="form-control" id="recipient-name" name="Password">
+                            </div>
+
+                            <div class="form-group text-left">
+                                <label for="recipient-name" class="col-form-label">Подтверждение пароля</label>
+                                <input type="text" class="form-control" id="recipient-name" name="ConfirmPassword">
+                            </div>
+
+                            <div class="form-group text-left" id="regMessageBlock">
+
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Зарегистрироваться</button>
+
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+
+                        </div>
+                    </div>
+                </form>
+
+            </div>
+        }
+
+    </div>
+</div>
+
+<div class="modal fade" id="sign-modal" tabindex="-1" role="dialog" aria-labelledby="sign-modal-label" aria-hidden="true">
+    <form class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="sign-modal-label">Вход</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="form-group">
+                    <label for="recipient-name" class="col-form-label">Email</label>
+                    <input type="text" class="form-control" id="recipient-name">
+                </div>
+                <div class="form-group">
+                    <label for="recipient-name" class="col-form-label">Пароль</label>
+                    <input type="text" class="form-control" id="recipient-name">
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+                <button type="button" class="btn btn-primary">Войти</button>
+            </div>
+        </div>
+    </form>
+
+</div>
 
 
 <div class="section section-contact-us text-center">
     <div class="container">
         <h2 class="title">@ViewBag.Title</h2>
-        <p class="description">Укажите условия сбора данных</p>
-        <div class="row">
-            <div class="col-lg-6 text-center col-md-8 ml-auto mr-auto">
-                <div class="input-group input-lg">
-                    <span class="input-group-addon">
-                        @*<i class="now-ui-icons users_circle-08"></i>*@
-                    </span>
-                    <input id="city" name="city" type="text" class="form-control" placeholder="Город">
+
+        <div id="search">
+
+            <p class="description">Укажите условия сбора данных</p>
+            <div class="row">
+                <div class="col-lg-6 text-center col-md-8 ml-auto mr-auto">
+                    <div class="input-group input-lg">
+                        <span class="input-group-addon">
+                            @*<i class="now-ui-icons users_circle-08"></i>*@
+                        </span>
+                        <input id="city" name="city" type="text" class="form-control" placeholder="Город">
+                    </div>
+
+
+
+
+
+                    <div class="input-group input-lg">
+                        <span class="input-group-addon">
+                            @*<i class="now-ui-icons"></i>*@
+                        </span>
+                        <input id="category" type="text" class="form-control" placeholder="Категория">
+                    </div>
+
+                    <div class="send-button">
+                        <button id="GetOrganizations" class="btn btn-primary btn-round btn-block btn-lg">Получить данные по организациям</button>
+                    </div>
                 </div>
+            </div>
 
+        </div>
 
-
-
-
-                <div class="input-group input-lg">
-                    <span class="input-group-addon">
-                        @*<i class="now-ui-icons"></i>*@
-                    </span>
-                    <input id="category" type="text" class="form-control" placeholder="Категория">
+        <div id="offers" class="is-hidden" style="animation-duration:1.75s">
+            <p class="description">Для того чтобы продолжить работу оплатите один из тарифов</p>
+            <div class="row">
+                <div class="col">
+                    <div class="card text-center" style="width: 18rem;">
+                        <div class="card-body">
+                            <h5 class="card-title">500 запросов</h5>
+                            <p class="card-text">
+                            </p><h2>500р</h2>
+                            - Парсинг по адресу, деятельности
+                            <br>
+                           
+                            <p></p>
+                            <a href="@Url.Action("Order","Payment",new { sum = 500 })" class="btn btn-primary">Купить</a>
+                        </div>
+                    </div>
                 </div>
-               
-                <div class="send-button">
-                    <button id="GetOrganizations"  class="btn btn-primary btn-round btn-block btn-lg">Получить данные по организациям</button>
+                <div class="col">
+                    <div class="card text-center" style="width: 18rem;">
+                        <div class="card-body">
+                            <h5 class="card-title">1000 запросов</h5>
+                            <p class="card-text">
+                            </p><h2>1590р</h2>
+                            - Парсинг по адресу, деятельности
+                            <br>
+                           
+                            <p></p>
+                            <a href="@Url.Action("Order","Payment",new { sum = 1590 })" class="btn btn-primary">Купить</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="card text-center" style="width: 18rem;">
+                        <div class="card-body">
+                            <h5 class="card-title">6000 запросов</h5>
+                            <p class="card-text">
+                            </p><h2>4990р</h2>
+                            - Парсинг по адресу, деятельности
+                            <br>
+                            
+                            <p></p>
+                            <a href="@Url.Action("Order","Payment",new { sum = 4990 })" class="btn btn-primary">Купить</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
-        <div class="row">
 
-            <div class="card">
-
-                <div class="card-body">
-                    <table id="organizations" class="display" style="width:100%">
-                        <thead>
-                            <tr>
-                                <th>Наименование</th>
-                                <th>Категории</th>
-                                <th>Страница компании</th>
-                                <th>Адрес</th>
-                                <th>Телефон</th>
-                                <th>Город</th>
-                            </tr>
-                        </thead>
-
-                    </table>
+        <div class="container">
+            <div class="row">
+                <div class="container mt-5">
+                    <div class="ui buttons mini">
+                        <button class="ui green button">Excel</button>
+                        <button id="history" class="ui yellow button">История</button>
+                    </div>
+                    <div id="organizations_wrapper" class="dataTables_wrapper no-footer">
+                        <div class="dt-buttons"></div><div id="organizations_processing" class="dataTables_processing" style="display: none;">Processing...</div><table id="organizations" class="display ui table orange dataTable no-footer" style="width: 100%;" role="grid">
+                            <thead>
+                                <tr role="row">
+                                    <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 146px;">Наименование</th>
+                                    <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 72px;">Время</th>
+                                    <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 72px;">Категории</th>
+                                    <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 238px;">Адрес</th>
+                                    <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 382px;">Телефон</th>
+                                    <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 382px;">Ссылки</th>
+                                    <th class="sorting_disabled" rowspan="1" colspan="1" style="width: 42px;">Город</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table><div class="dataTables_paginate paging_simple_numbers" id="organizations_paginate"><a class="paginate_button previous disabled" aria-controls="organizations" data-dt-idx="0" tabindex="0" id="organizations_previous">Previous</a><span><a class="paginate_button current" aria-controls="organizations" data-dt-idx="1" tabindex="0">1</a></span><a class="paginate_button next disabled" aria-controls="organizations" data-dt-idx="2" tabindex="0" id="organizations_next">Next</a></div>
+                    </div>
                 </div>
+
             </div>
 
         </div>

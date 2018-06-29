@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Security.Claims;
@@ -6,8 +7,10 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using Newtonsoft.Json;
 using YandexMapsOrganizationParser.Models;
 
 namespace YandexMapsOrganizationParser.Controllers
@@ -57,6 +60,8 @@ namespace YandexMapsOrganizationParser.Controllers
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
+            CreateAdminIfNeeded();
+
             ViewBag.ReturnUrl = returnUrl;
             return View();
         }
@@ -66,12 +71,10 @@ namespace YandexMapsOrganizationParser.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Login(LoginViewModel model, string returnUrl)
+        public async Task<JsonResult> Login(LoginViewModel model, string returnUrl)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(model);
-            }
+            dynamic res = new System.Dynamic.ExpandoObject();
+            res.ErrorList = new List<string>();
 
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
@@ -79,15 +82,22 @@ namespace YandexMapsOrganizationParser.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
-                    return RedirectToLocal(returnUrl);
+                    res.success = true;
+                    return Json(new { success = true, responseText = JsonConvert.SerializeObject(res) });
                 case SignInStatus.LockedOut:
-                    return View("Lockout");
+
+                    res.ErrorList.Add("Locked Out");
+                    return Json(new { success = false, responseText = JsonConvert.SerializeObject(res) });
+
                 case SignInStatus.RequiresVerification:
-                    return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
+                    res.ErrorList.Add("Request verification");
+                    return Json(new { success = false, responseText = JsonConvert.SerializeObject(res) });
+
+
                 case SignInStatus.Failure:
                 default:
-                    ModelState.AddModelError("", "Invalid login attempt.");
-                    return View(model);
+                    res.ErrorList.Add("Неправильный логин или пароль");
+                    return Json(new { success = false, responseText = JsonConvert.SerializeObject(res) });
             }
         }
 
@@ -147,8 +157,11 @@ namespace YandexMapsOrganizationParser.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Register(RegisterViewModel model)
+        public async Task<JsonResult> Register(RegisterViewModel model)
         {
+            dynamic res = new System.Dynamic.ExpandoObject();
+            res.ErrorList = new List<string>();
+
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
@@ -156,20 +169,48 @@ namespace YandexMapsOrganizationParser.Controllers
                 if (result.Succeeded)
                 {
                     await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
+
                     // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
                     // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
                     // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                    
+                    await UserManager.SendEmailAsync(user.Id, "Yandex Org. Parser", String.Format( "Вы успешно зарегистрировались на Yandex Org. Parser. Ваш логин {0} - Пароль - {1}",model.Email,model.Password));
 
-                    return RedirectToAction("Index", "Home");
+                    return Json(new { success = true, responseText = JsonConvert.SerializeObject(res) });
                 }
                 AddErrors(result);
+
+                // ERROR
+                foreach (var val in ModelState.Values)
+                {
+                    foreach (var er in val.Errors)
+                    {
+
+                        res.ErrorList.Add(er.ErrorMessage);
+
+
+                    }
+                }
+
+                return Json(new { success = false, responseText = JsonConvert.SerializeObject(res) });
+            }
+
+            // ERROR
+            foreach (var val in ModelState.Values)
+            {
+                foreach (var er in val.Errors)
+                {
+
+                    res.ErrorList.Add(er.ErrorMessage);
+
+
+                }
             }
 
             // If we got this far, something failed, redisplay form
-            return View(model);
+            res.ErrorList.Add("Введены некорректные данные");
+            return Json(new { success = false, responseText = JsonConvert.SerializeObject(res) });
         }
 
         //
@@ -421,6 +462,35 @@ namespace YandexMapsOrganizationParser.Controllers
             }
 
             base.Dispose(disposing);
+        }
+
+        private void CreateAdminIfNeeded()
+        {
+            // Get Admin Account
+            string AdminUserName = "Admin123@Admin.com";
+            string AdminPassword = "Admin123@Admin.com";
+
+            // See if Admin exists
+            //var objAdminUser = UserManager.FindByEmail(AdminUserName);
+
+            var objAdminUser = UserManager.Users.FirstOrDefault(x => x.UserName == AdminUserName);
+
+            
+
+
+            if (objAdminUser == null)
+            {
+
+
+                // Create Admin user
+                var objNewAdminUser = new ApplicationUser { UserName = AdminUserName, Email = AdminUserName };
+                var AdminUserCreateResult = UserManager.Create(objNewAdminUser, AdminPassword);
+                // Put user in Admin role
+                //UserManager.AddToRole(objNewAdminUser.Id, "Administrator");
+
+            }
+
+
         }
 
         #region Helpers
